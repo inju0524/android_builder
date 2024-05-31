@@ -15,9 +15,11 @@ jobs:
           java-version: 1.8
       - id: get-project
         name: Get project name
-        run: echo "::set-output name=PROJECT::$(cat project-to-build)"
+        run: |
+          PROJECT=$(cat project-to-build)
+          echo "PROJECT=$PROJECT" >> $GITHUB_ENV
       - name: Clone project
-        run: git clone --depth=1 ${{ steps.get-project.outputs.PROJECT }} project
+        run: git clone --depth=1 ${{ env.PROJECT }} project
       - name: Build the app
         working-directory: ./project
         run: |
@@ -29,4 +31,3 @@ jobs:
         with:
           name: my-build-apk
           path: ./**/*.apk
-
